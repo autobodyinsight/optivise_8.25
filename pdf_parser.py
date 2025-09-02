@@ -15,6 +15,11 @@ def parse_pdf(file_path: str) -> dict:
     for line in raw_lines:
         print(line)
 
+    # 🔍 Insert this block right here to detect headers
+    for line in raw_lines:
+        if line.isupper() and len(line.strip().split()) <= 3:
+            print("🔹 Detected header:", line)
+
     operations = ["repair", "rpr"]
     parts = ["bumper"]
 
@@ -25,8 +30,11 @@ def parse_pdf(file_path: str) -> dict:
         if any(op in normalized for op in operations) and any(part in normalized for part in parts):
             parsed_parts.append(line)
 
+    headers = [line for line in raw_lines if line.isupper() and len(line.strip().split()) <= 3]
+
     return {
-        "raw_lines": raw_lines,
-        "seen": set(normalize(line) for line in raw_lines),
-        "parts": parsed_parts
-    }
+    "raw_lines": raw_lines,
+    "seen": set(normalize(line) for line in raw_lines),
+    "parts": parsed_parts,
+    "headers": headers  # ✅ Add this line
+}
